@@ -34,7 +34,7 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange>
-          <Navbar1></Navbar1>
+          {/* <Navbar1></Navbar1> */}
           {children}
         </ThemeProvider>
       </body>
