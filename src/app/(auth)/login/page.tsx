@@ -1,112 +1,126 @@
 "use client";
+import React, { useState } from "react";
+import Link from "next/link";
+import { Eye, EyeOff, ChevronRight, Mail, Lock, Home } from "lucide-react";
 
-import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import { FiMail, FiLock } from "react-icons/fi";
-
-export default function LoginPage() {
-  const router = useRouter();
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    try {
-      const form = e.currentTarget;
-      const email = (form.elements.namedItem("email") as HTMLInputElement).value;
-      const password = (form.elements.namedItem("password") as HTMLInputElement).value;
-
-      // Proxy fetch to avoid CORS
-      const res = await fetch("/api/auth/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-      console.log("Login response:", data); // Debug
-
-      if (!res.ok || !data.user) throw new Error(data.message || "Login failed");
-
-      // Safe role reading
-      const role = data.user.role || "customer";
-
-      alert(`Login successful! Role: ${role}`); // Optional alert
-
-      router.push(role === "admin" ? "/admin" : "/user");
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Login failed");
-    } finally {
-      setLoading(false);
-    }
-  };
+export default function LoginForm() {
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <main className="min-h-screen flex items-center justify-center
-      bg-white text-black
-      dark:bg-black dark:text-white transition-colors">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-white dark:bg-black font-sans">
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 p-8 md:p-10 rounded-[30px] shadow-lg dark:shadow-black/30 border border-slate-100 dark:border-gray-700">
 
-      <div className="w-full max-w-sm px-8 py-10
-        border border-black dark:border-white
-        rounded-2xl shadow-lg">
+        {/* --- Home Button --- */}
+        <div className="mb-6 text-left">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            <Home size={16} /> Home
+          </Link>
+        </div>
 
-        <h1 className="text-2xl font-bold text-center">RentRide</h1>
-        <p className="text-sm text-center opacity-70 mt-1">Login to your account</p>
+        {/* --- Header --- */}
+        <div className="mb-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white">
+            Welcome Back
+          </h2>
+          <p className="text-slate-500 dark:text-slate-400 mt-2 font-medium">
+            Sign in to your account
+          </p>
+        </div>
 
-        <form onSubmit={handleLogin} className="space-y-6 mt-8">
+        {/* --- Form --- */}
+        <form className="space-y-6">
+          {/* Email/Phone */}
+          <div className="space-y-2 relative">
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">
+              Email / Phone*
+            </label>
 
-          {/* Email */}
-          <div className="flex items-center gap-3 border border-black dark:border-white
-            rounded-xl px-4 py-3">
-            <FiMail className="text-lg opacity-70" />
-            <input
-              name="email"
-              type="email"
-              placeholder="Email"
-              className="w-full bg-transparent focus:outline-none"
-              required
-            />
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300 pointer-events-none">
+                <Mail size={16} />
+              </span>
+              <input
+                type="text"
+                placeholder="Enter your email or phone"
+                className="w-full border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-xl py-3 px-4 pl-10 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all text-slate-900 dark:text-white"
+                aria-label="Email or phone"
+              />
+            </div>
           </div>
 
           {/* Password */}
-          <div className="flex items-center gap-3 border border-black dark:border-white
-            rounded-xl px-4 py-3">
-            <FiLock className="text-lg opacity-70" />
-            <input
-              name="password"
-              type="password"
-              placeholder="Password"
-              className="w-full bg-transparent focus:outline-none"
-              required
-            />
+          <div className="space-y-2 relative">
+            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 ml-1">
+              Password*
+            </label>
+
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300 pointer-events-none">
+                <Lock size={16} />
+              </span>
+
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                className="w-full border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-xl py-3 px-4 pl-10 text-sm outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all text-slate-900 dark:text-white"
+                aria-label="Password"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-300 hover:text-slate-600 dark:hover:text-white transition-colors"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
-          {error && (
-            <div className="text-sm px-3 py-2 border border-black dark:border-white rounded-lg">
-              {error}
-            </div>
-          )}
+          {/* Forgot Password */}
+          <div className="text-right">
+            <Link
+              href="#"
+              className="text-sm font-semibold text-slate-400 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-500 transition-colors"
+            >
+              Forgot Password?
+            </Link>
+          </div>
 
+          {/* Sign In Button */}
           <button
             type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-xl border border-black dark:border-white
-              bg-black text-white dark:bg-white dark:text-black
-              font-semibold transition disabled:opacity-60"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2"
           >
-            {loading ? "Signing in..." : "Login"}
+            Sign In <ChevronRight size={20} />
           </button>
-        </form>
 
-        <p className="text-sm text-center mt-6 opacity-70">
-          Don’t have an account?{" "}
-          <a href="/register" className="underline font-medium">Register</a>
-        </p>
+          {/* Divider */}
+          <div className="relative py-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200 dark:border-gray-700"></div>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-white dark:bg-gray-900 px-2 text-slate-400 font-bold tracking-widest">
+                Or
+              </span>
+            </div>
+          </div>
+
+          {/* Sign Up Link (small, not rounded) */}
+          <div className="text-center">
+            <Link
+              href="/register"
+              className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              Create an account
+            </Link>
+          </div>
+        </form>
       </div>
-    </main>
+    </div>
   );
 }

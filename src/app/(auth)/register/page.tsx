@@ -1,148 +1,130 @@
 "use client";
-
-import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import { FiUser, FiMail, FiPhone, FiLock } from "react-icons/fi";
+import React, { useState } from "react";
+import Link from "next/link";
+import {
+  Eye, EyeOff, User, Phone, Mail, Camera,
+  GraduationCap, Home, Lock, ArrowRight
+} from "lucide-react";
 
 export default function RegisterPage() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
+  const [role, setRole] = useState("STUDENT");
+  const [showPass, setShowPass] = useState(false);
+  const [showRePass, setShowRePass] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
 
-  const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    try {
-      const form = e.currentTarget;
-      const name = (form.elements.namedItem("name") as HTMLInputElement).value;
-      const email = (form.elements.namedItem("email") as HTMLInputElement).value;
-      const phone = (form.elements.namedItem("phone") as HTMLInputElement).value;
-      const password = (form.elements.namedItem("password") as HTMLInputElement).value;
-
-      // Proxy fetch → avoids CORS
-      const res = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, phone, password, role: "customer" }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || "Registration failed");
-
-      // ✅ Registration successful alert
-      alert("Registration successful! You can now login.");
-
-      // Optionally redirect to login page
-      // router.push("/login");
-
-    } catch (err: Error | unknown) {
-      setError(err instanceof Error ? err.message : "Registration failed");
-    } finally {
-      setLoading(false);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImage(URL.createObjectURL(e.target.files[0]));
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    alert("Form submitted! Add real validation logic here.");
+  };
 
   return (
-    <main className="min-h-screen flex items-center justify-center
-      bg-white text-black
-      dark:bg-gray-900 dark:text-white transition-colors">
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#020617] flex items-center justify-center py-8 px-4 transition-colors duration-500">
+      <div className="max-w-lg w-full bg-white dark:bg-slate-900 rounded-[40px] shadow-2xl shadow-blue-500/5 dark:shadow-none border border-slate-100 dark:border-slate-800/50 p-8 md:p-10 text-center relative overflow-hidden">
 
-      <div className="w-full max-w-sm px-8 py-10
-        border border-gray-300 dark:border-gray-700
-        rounded-3xl shadow-lg">
+        {/* --- Home Button Inside Form --- */}
+        <Link href="/" className="absolute top-4 left-4 flex items-center gap-2 bg-white dark:bg-slate-900 p-2.5 rounded-2xl shadow-sm text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-500 transition-all border border-slate-200 dark:border-slate-800 group text-[12px] font-bold tracking-wider">
+          <Home size={16} className="group-hover:-translate-y-0.5 transition-transform" />
+          HOME
+        </Link>
 
-        <h1 className="text-2xl font-bold text-center">Register</h1>
-        <p className="text-sm text-center opacity-70 mt-1">Create your account</p>
-
-        <form onSubmit={handleRegister} className="space-y-5 mt-8">
-
-          {/* Name */}
-          <div className="flex items-center gap-3 border border-gray-300 dark:border-gray-700
-            rounded-xl px-4 py-3">
-            <FiUser className="text-lg opacity-70" />
-            <input
-              name="name"
-              type="text"
-              placeholder="Full Name"
-              className="w-full bg-transparent focus:outline-none"
-              required
-            />
+        {/* Header */}
+        <div className="mb-6">
+          <div className="w-14 h-14 bg-blue-600 dark:bg-blue-500 rounded-2xl mx-auto mb-3 flex items-center justify-center shadow-xl shadow-blue-500/20 transform -rotate-6 transition-transform">
+            <User className="text-white" size={28} />
           </div>
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight uppercase">
+            Join <span className="text-blue-600">Us</span>
+          </h2>
+          <p className="text-[11px] mt-1.5 font-bold text-slate-400 dark:text-slate-500 tracking-widest uppercase">
+            Create your profile in seconds
+          </p>
+        </div>
 
-          {/* Email */}
-          <div className="flex items-center gap-3 border border-gray-300 dark:border-gray-700
-            rounded-xl px-4 py-3">
-            <FiMail className="text-lg opacity-70" />
-            <input
-              name="email"
-              type="email"
-              placeholder="Email"
-              className="w-full bg-transparent focus:outline-none"
-              required
-            />
-          </div>
-
-          {/* Phone */}
-          <div className="flex items-center gap-3 border border-gray-300 dark:border-gray-700
-            rounded-xl px-4 py-3">
-            <FiPhone className="text-lg opacity-70" />
-            <input
-              name="phone"
-              type="text"
-              placeholder="Phone"
-              className="w-full bg-transparent focus:outline-none"
-              required
-            />
-          </div>
-
-          {/* Password */}
-          <div className="flex items-center gap-3 border border-gray-300 dark:border-gray-700
-            rounded-xl px-4 py-3">
-            <FiLock className="text-lg opacity-70" />
-            <input
-              name="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              className="w-full bg-transparent focus:outline-none"
-              required
-            />
+        {/* Role Selection */}
+        <div className="flex bg-slate-100 dark:bg-slate-800/50 p-1 rounded-2xl mb-6">
+          {["STUDENT", "TUTOR"].map((item) => (
             <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="opacity-70 font-medium"
+              key={item}
+              onClick={() => setRole(item)}
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs transition-all duration-300 ${role === item
+                ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-white shadow-sm"
+                : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+                }`}
             >
-              {showPassword ? "Hide" : "Show"}
+              {item === "STUDENT" ? <User size={14} /> : <GraduationCap size={14} />}
+              {item}
             </button>
+          ))}
+        </div>
+
+        {/* Form */}
+        <form className="space-y-3" onSubmit={handleSubmit}>
+          {/* Avatar Upload */}
+          <div className="relative w-16 h-16 mx-auto mb-4">
+            <div className="w-full h-full rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
+              {image ? <img src={image} className="w-full h-full object-cover" /> : <User className="text-slate-300 dark:text-slate-600" size={24} />}
+            </div>
+            <label className="absolute -bottom-1 -right-1 bg-blue-600 dark:bg-blue-500 p-1.5 rounded-lg text-white cursor-pointer hover:scale-110 transition-transform shadow-lg border-2 border-white dark:border-slate-900">
+              <Camera size={12} />
+              <input type="file" className="hidden" onChange={handleImageChange} accept="image/*" />
+            </label>
           </div>
 
-          {error && (
-            <div className="text-sm px-3 py-2 border border-red-400 dark:border-red-600 text-red-600 dark:text-red-400 rounded-lg">
-              {error}
+          {/* Inputs */}
+          {[
+            { label: "NAME", icon: User, placeholder: "John Doe", type: "text" },
+            { label: "PHONE", icon: Phone, placeholder: "+880...", type: "tel" },
+            { label: "EMAIL", icon: Mail, placeholder: "hello@example.com", type: "email" }
+          ].map((field) => (
+            <div key={field.label} className="relative group">
+              <field.icon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={16} />
+              <input
+                type={field.type}
+                placeholder={field.placeholder}
+                className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-3 pl-11 pr-3 outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 dark:text-white text-xs font-medium"
+                required
+              />
             </div>
-          )}
+          ))}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-xl
-              border border-gray-300 dark:border-gray-700
-              bg-black text-white dark:bg-white dark:text-black
-              font-semibold transition disabled:opacity-60"
-          >
-            {loading ? "Registering..." : "Register"}
+          {/* Password Fields */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="relative group">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500" size={16} />
+              <input type={showPass ? "text" : "password"} placeholder="Password" className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-3 pl-11 pr-3 outline-none focus:border-blue-500 dark:text-white text-xs" required />
+              <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+            <div className="relative group">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500" size={16} />
+              <input type={showRePass ? "text" : "password"} placeholder="Confirm" className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl py-3 pl-11 pr-3 outline-none focus:border-blue-500 dark:text-white text-xs" required />
+              <button type="button" onClick={() => setShowRePass(!showRePass)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                {showRePass ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <button className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-bold py-3.5 rounded-2xl shadow-lg shadow-blue-500/20 transition-all active:scale-[0.98] mt-4 text-xs tracking-widest flex items-center justify-center gap-2">
+            GET STARTED
+            <ArrowRight size={16} />
           </button>
-        </form>
 
-        <p className="text-sm text-center mt-6 opacity-70">
-          Already have an account?{" "}
-          <a href="/login" className="underline font-medium">Login</a>
-        </p>
+          {/* Footer */}
+          <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800 text-center">
+            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+              Already a member? <Link href="/login" className="text-blue-600 dark:text-blue-400 font-bold hover:underline ml-1">Log In</Link>
+            </p>
+          </div>
+        </form>
       </div>
-    </main>
+    </div>
   );
 }
