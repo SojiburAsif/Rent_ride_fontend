@@ -1,10 +1,34 @@
 "use client";
+
 import React from "react";
 import { motion } from "framer-motion";
 import {
-    Facebook, Twitter, Instagram, Linkedin,
-    Mail, Phone, GraduationCap, BookOpen, Pencil, AtSign, Send, ArrowUp
+    Facebook,
+    Twitter,
+    Instagram,
+    Linkedin,
+    Mail,
+    Phone,
+    GraduationCap,
+    BookOpen,
+    Pencil,
+    AtSign,
+    Send,
+    ArrowUp,
 } from "lucide-react";
+
+// Type-safe floating variants
+const floatingVariants = {
+    animate: (i: number) => ({
+        y: [0, -25, 0],
+        rotate: [0, 15, -15, 0],
+        transition: {
+            duration: 5 + i,
+            repeat: Infinity,
+            ease: [0.42, 0, 0.58, 1] as [number, number, number, number], // Type-safe cubic-bezier
+        },
+    }),
+};
 
 const FooterPage = () => {
     const currentYear = new Date().getFullYear();
@@ -14,23 +38,9 @@ const FooterPage = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    // Floating animation for background icons
-    const floatingVariants = {
-        animate: (i: number) => ({
-            y: [0, -25, 0],
-            rotate: [0, 15, -15, 0],
-            transition: {
-                duration: 5 + i,
-                repeat: Infinity,
-                ease: [0.42, 0, 0.58, 1], // Framer Motion compatible cubic-bezier
-            },
-        }),
-    };
-
     return (
         <footer className="relative bg-white dark:bg-black pt-20 pb-10 overflow-hidden border-t border-slate-100 dark:border-slate-900">
-
-            {/* --- Floating Background Icons (Deep Colors) --- */}
+            {/* --- Floating Background Icons --- */}
             <div className="absolute inset-0 pointer-events-none">
                 <motion.div
                     custom={1}
@@ -69,17 +79,17 @@ const FooterPage = () => {
                 </motion.div>
             </div>
 
-
             <div className="container mx-auto px-6 max-w-7xl relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-
                     {/* Column 1: Brand */}
                     <div className="space-y-6">
                         <div className="flex items-center gap-2">
                             <div className="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-500/20">
-                                <GraduationCap className="" size={28} />
+                                <GraduationCap size={28} />
                             </div>
-                            <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">SkillBridge</h2>
+                            <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+                                SkillBridge
+                            </h2>
                         </div>
                         <p className="text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
                             Empowering learners worldwide with expert-led courses and a supportive community.
@@ -100,11 +110,16 @@ const FooterPage = () => {
 
                     {/* Column 2: Navigation */}
                     <div>
-                        <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-7 uppercase tracking-widest">Navigation</h4>
+                        <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-7 uppercase tracking-widest">
+                            Navigation
+                        </h4>
                         <ul className="space-y-4">
                             {["About us", "Courses", "Instructor", "FAQs", "Blogs"].map((item) => (
                                 <li key={item}>
-                                    <a href="#" className="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-500 transition-colors font-medium flex items-center gap-2 group">
+                                    <a
+                                        href="#"
+                                        className="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-500 transition-colors font-medium flex items-center gap-2 group"
+                                    >
                                         <span className="w-0 h-[2px] bg-blue-600 group-hover:w-4 transition-all duration-300"></span>
                                         {item}
                                     </a>
@@ -115,17 +130,23 @@ const FooterPage = () => {
 
                     {/* Column 3: Contact */}
                     <div>
-                        <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-7 uppercase tracking-widest">Contact Us</h4>
+                        <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-7 uppercase tracking-widest">
+                            Contact Us
+                        </h4>
                         <div className="space-y-6">
                             <div className="flex gap-4">
-                                <div className="text-blue-600 dark:text-blue-500"><Phone size={20} /></div>
+                                <div className="text-blue-600 dark:text-blue-500">
+                                    <Phone size={20} />
+                                </div>
                                 <div className="text-slate-500 dark:text-slate-400 text-sm font-medium">
                                     <p>(207) 555-0119</p>
                                     <p>(704) 555-0127</p>
                                 </div>
                             </div>
                             <div className="flex gap-4">
-                                <div className="text-blue-600 dark:text-blue-500"><Mail size={20} /></div>
+                                <div className="text-blue-600 dark:text-blue-500">
+                                    <Mail size={20} />
+                                </div>
                                 <div className="text-slate-500 dark:text-slate-400 text-sm font-medium italic">
                                     <p>support@eduall.com</p>
                                 </div>
@@ -135,9 +156,13 @@ const FooterPage = () => {
 
                     {/* Column 4: Newsletter */}
                     <div className="relative">
-                        <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-7 uppercase tracking-widest">Subscribe</h4>
+                        <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-7 uppercase tracking-widest">
+                            Subscribe
+                        </h4>
                         <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-[30px] border border-slate-100 dark:border-slate-800">
-                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 font-medium">Get latest updates & offers.</p>
+                            <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 font-medium">
+                                Get latest updates & offers.
+                            </p>
                             <div className="relative">
                                 <input
                                     type="email"
@@ -155,15 +180,20 @@ const FooterPage = () => {
                 {/* Bottom Bar */}
                 <div className="pt-10 border-t border-slate-100 dark:border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6 relative">
                     <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-                        © {currentYear} <span className="text-blue-600 dark:text-blue-500 font-bold">EduAll</span>. All Rights Reserved.
+                        © {currentYear}{" "}
+                        <span className="text-blue-600 dark:text-blue-500 font-bold">EduAll</span>. All Rights Reserved.
                     </p>
 
                     <div className="flex gap-8 text-sm font-bold text-slate-400 dark:text-slate-600">
-                        <a href="#" className="hover:text-blue-600 transition-colors">Privacy</a>
-                        <a href="#" className="hover:text-blue-600 transition-colors">Terms</a>
+                        <a href="#" className="hover:text-blue-600 transition-colors">
+                            Privacy
+                        </a>
+                        <a href="#" className="hover:text-blue-600 transition-colors">
+                            Terms
+                        </a>
                     </div>
 
-                    {/* --- Back To Top Button --- */}
+                    {/* Back To Top Button */}
                     <motion.button
                         whileHover={{ y: -5 }}
                         whileTap={{ scale: 0.9 }}
