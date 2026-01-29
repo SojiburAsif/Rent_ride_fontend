@@ -3,7 +3,11 @@ import CategorySection from "@/components/layout/Services";
 import AboutSection from "@/components/layout/Session";
 
 
-export default function Home() {
+
+export default async function Home() {
+
+  const res = await fetch("")
+
   return (
     <div className="">
       <HeroSection></HeroSection>

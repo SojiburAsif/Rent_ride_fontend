@@ -12,13 +12,15 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 
 export default function DashboardLayout({
   admin,
-  user,
+  Student,
+  Tutor,
 }: {
-  children: React.ReactNode;
   admin: React.ReactNode;
-  user: React.ReactNode;
+  Student: React.ReactNode;
+  Tutor: React.ReactNode;
 }) {
-  const userInfo = { role: "admin" };
+
+  const userInfo = { role: "student" };
 
   return (
     <SidebarProvider>
@@ -30,17 +32,20 @@ export default function DashboardLayout({
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="#">Building Your Application</BreadcrumbLink>
+                <BreadcrumbLink href="#">Dashboard</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                <BreadcrumbPage>{userInfo.role}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </header>
+
         <div className="flex-1 flex flex-col gap-4 p-4">
-          {userInfo.role === "admin" ? admin : user}
+          {userInfo.role === "admin" && admin}
+          {userInfo.role === "student" && Student}
+          {userInfo.role === "tutor" && Tutor}
         </div>
       </SidebarInset>
     </SidebarProvider>

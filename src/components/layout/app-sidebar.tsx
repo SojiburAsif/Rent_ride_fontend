@@ -1,23 +1,23 @@
 import * as React from "react";
+import Link from "next/link";
 
-import { SearchForm } from "@/components/layout/search-form";
-import { VersionSwitcher } from "@/components/layout/version-switcher";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
+
 import { adminRoutes } from "@/routes/adminRoutes";
-import { userRoutes } from "@/routes/userRoutes";
+
 import { Route } from "@/types";
+import { studentRoutes } from "@/routes/studentRoutes";
+import { tutorRoutes } from "@/routes/tutorRoutes";
 
 export function AppSidebar({
   user,
@@ -31,8 +31,11 @@ export function AppSidebar({
     case "admin":
       routes = adminRoutes;
       break;
-    case "user":
-      routes = userRoutes;
+    case "student":
+      routes = studentRoutes;
+      break;
+    case "tutor":
+      routes = tutorRoutes; 
       break;
     default:
       routes = [];
@@ -42,12 +45,12 @@ export function AppSidebar({
   return (
     <Sidebar {...props}>
       <SidebarContent>
-        {routes.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+        {routes.map((group) => (
+          <SidebarGroup key={group.title}>
+            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {item.items.map((item) => (
+                {group.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
                       <Link href={item.url}>{item.title}</Link>
